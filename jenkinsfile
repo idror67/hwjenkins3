@@ -1,0 +1,24 @@
+pipeline {
+    agent { label 'agent1' }
+    
+    parameters {
+        booleanParam(name: 'DRY_RUN', defaultValue: false, description: 'Dry Run the pipeline')
+    }
+
+    stages {
+        stage('Git Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/fullstackjava082023/Jenkins1HW.git'
+            }
+        }
+        
+        stage('Run Python Code') {
+            when {
+                expression { return params.DRY_RUN == false }
+            }
+            steps {
+                sh 'python3 main.py > output.txt'
+            }
+        }
+    }
+}
